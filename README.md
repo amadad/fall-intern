@@ -77,4 +77,6 @@ This project is open-source. Feel free to use, modify, and distribute it. Ensure
 
 ## 👥 Contributors
 
+The original project was created by Jason Zhou.
+
 - [Jason Zhou](https://github.com/JayZeeDesign)
