@@ -1,0 +1,6 @@
+# Ignore virtual environment
+*.env
+*.vscode
+.venv/
+.DS_Store
+*workspace
