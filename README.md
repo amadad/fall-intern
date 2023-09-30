@@ -1,11 +1,13 @@
-<<<<<<< HEAD
-# fall-intern
-=======
-# Fall Intern Project
+# Fall Intern
 
 ## 📖 Overview
 
-The Fall Intern project is a research assistant tool that utilizes the power of various libraries like streamlit, BeautifulSoup, requests, and FastAPI to fetch, scrape, and summarize web content based on user queries. It provides an interactive web application to conduct research on user-defined topics.
+Fall Intern is an intelligent, cutting-edge research tool tailored to assist users in diving deep into various topics and questions. Built on the robust foundation of multiple libraries, including Streamlit, BeautifulSoup, the application is designed to fetch, scrape, summarize, and present web content with concision and precision.
+
+- **Efficient Research:** No need to manually sift through countless search results or pages. Get straight to the point with accurate and relevant information.
+- **Web Scraping Capabilities:** With the integration of BeautifulSoup, extract valuable data directly from websites, ensuring you're always equipped with the most up-to-date information.
+- **Intelligent Summarization:** For content-heavy topics, the application condenses the information, presenting a clear and concise overview without missing out on essential details.
+- **Interactive Web Interface:** A user-friendly Streamlit web application ensures a smooth and intuitive experience for all users, regardless of their tech-savviness.
 
 ## 🚀 Features
 
@@ -75,16 +77,4 @@ This project is open-source. Feel free to use, modify, and distribute it. Ensure
 
 ## 👥 Contributors
 
-- [Your Name](Your GitHub Profile Link)
-- [Contributor 2](GitHub Profile Link)
-
-Feel free to add your name when you contribute to the project!
-
-## 📬 Contact
-
-If you have any questions or suggestions, reach out!
-
-**Email:** your.email@example.com
-
-Thank you for using or contributing to the Fall Intern project! 🌟
->>>>>>> master
+- [Jason Zhou](https://github.com/JayZeeDesign)
