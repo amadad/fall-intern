@@ -165,14 +165,5 @@ def main():
         for row in reader:
             print(row)
 
-
-    # After the loop, you can check the contents of the output file
-    with open('data/data01-output.csv', 'r') as output_file:
-        reader = csv.reader(output_file)
-        for row in reader:
-            print(row)
-
-
-
 if __name__ == "__main__":
     main()
