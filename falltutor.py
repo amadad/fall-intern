@@ -1,13 +1,12 @@
 import os
+import csv
 import time
 import json
 import requests
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
-import streamlit as st
 from pydantic import BaseModel, Field
 from typing import Type
-#from fastapi import FastAPI
 
 # Langchain imports
 from langchain import PromptTemplate
@@ -26,7 +25,7 @@ BROWSERLESS_API_KEY = os.getenv("BROWSERLESS_API_KEY")
 SERPER_API_KEY = os.getenv("SERPER_API_KEY")
 
 # Initialize ChatOpenAI model
-llm = ChatOpenAI()
+llm = ChatOpenAI(model="gpt-3.5-turbo-16k")
 
 # Define a search function to query Google using serper.dev API
 def search(query: str) -> str:
@@ -40,20 +39,31 @@ def search(query: str) -> str:
     return response.text
 
 # Define a function to scrape website content and potentially summarize it
-def scrape_website(objective: str, url: str) -> str:
+def scrape_website(objective: str, url: str) -> dict:
     """Scrape a website and summarize its content if it's too large."""
     headers = {
         'Cache-Control': 'no-cache',
         'Content-Type': 'application/json',
     }
+
     post_url = f"https://chrome.browserless.io/content?token={BROWSERLESS_API_KEY}"
-    response = requests.post(post_url, headers=headers, json={"url": url})
+    try:
+        response = requests.post(post_url, headers=headers, json={"url": url})
+        response.raise_for_status()  # This will raise an HTTPError if the response was not successful
+    except requests.HTTPError as http_err:
+        print(f"HTTP error occurred: {http_err}")
+        print(f"Response content: {response.content}")
+        raise
+    except Exception as err:
+        print(f"Other error occurred: {err}")
+        raise
 
     if response.status_code == 200:
         soup = BeautifulSoup(response.content, "html.parser")
         text = soup.get_text()
         # Summarize content if it exceeds 10,000 characters
-        return summary(objective, text) if len(text) > 10000 else text
+        text = summary(objective, text) if len(text) > 10000 else text
+        return {"text": text, "url": url}
 
     raise ValueError(f"HTTP request failed with status code {response.status_code}")
 
@@ -122,37 +132,47 @@ agent = initialize_agent(
     memory=memory,
 )
 
-# Define the main Streamlit app
+
 def main():
-    """Main Streamlit application."""
-    st.set_page_config(page_title="Fall Intern", page_icon=":bird:")
-    st.header(":globe_with_meridians: Fall Intern")
-    st.subheader('Go deeper on topics and questions.')
-    query = st.text_input("Research goal")
+    with open('data/data01.csv', 'r') as input_file, open('data/data01-output.csv', 'w', newline='') as output_file:
+        reader = csv.reader(input_file)
+        writer = csv.writer(output_file)
+        next(reader, None)  # skip the headers
+        for row in reader:
+            question = row[0]
+            result = agent({"input": question})
+            print(result)  # Debugging print statement
+            
+            # Directly assign the output as the summary
+            summary = result['output']
 
-    # Sidebar with app information and support
-    st.sidebar.title('About the app')
-    st.sidebar.markdown("...")  # Provide the sidebar content here as before
+            # Extract the URL if it's present in the summary
+            url = ""
+            if "Source: [" in summary:
+                start = summary.index("Source: [") + len("Source: [")
+                end = summary.index("]", start)
+                url = summary[start:end]
 
-    if query:
-        with st.spinner("Researching..."):
-            result = agent({"input": query})
-        st.info(result['output'])
+            # Check if row has enough elements before trying to access them
+            if len(row) >= 4:
+                writer.writerow([question, summary, url, row[2], row[3]])
+            else:
+                writer.writerow([question, summary, url])
 
-if __name__ == '__main__':
-     main()
+    # After the loop, you can check the contents of the output file
+    with open('data/data01-output.csv', 'r') as output_file:
+        reader = csv.reader(output_file)
+        for row in reader:
+            print(row)
 
-# FastAPI endpoint (commented out for now)
-# app = FastAPI()
 
-# class Query(BaseModel):
-#
-# class Query(BaseModel):
-#     query: str
+    # After the loop, you can check the contents of the output file
+    with open('data/data01-output.csv', 'r') as output_file:
+        reader = csv.reader(output_file)
+        for row in reader:
+            print(row)
 
-# @app.post("/")
-# def researchAgent(query: Query):
-#     query = query.query
-#     content = agent({"input": query})
-#     actual_content = content['output']
-#     return actual_content
+
+
+if __name__ == "__main__":
+    main()
