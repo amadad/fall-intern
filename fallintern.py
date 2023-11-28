@@ -5,11 +5,9 @@ import requests
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 import streamlit as st
+from openai import OpenAI
 from pydantic import BaseModel, Field
 from typing import Type
-#from fastapi import FastAPI
-
-# Langchain imports
 from langchain import PromptTemplate
 from langchain.agents import initialize_agent, Tool, AgentType
 from langchain.chat_models import ChatOpenAI
@@ -26,7 +24,8 @@ BROWSERLESS_API_KEY = os.getenv("BROWSERLESS_API_KEY")
 SERPER_API_KEY = os.getenv("SERPER_API_KEY")
 
 # Initialize ChatOpenAI model
-llm = ChatOpenAI()
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+llm = ChatOpenAI(model_name='gpt-3.5-turbo')
 
 # Define a search function to query Google using serper.dev API
 def search(query: str) -> str:
@@ -141,18 +140,3 @@ def main():
 
 if __name__ == '__main__':
      main()
-
-# FastAPI endpoint (commented out for now)
-# app = FastAPI()
-
-# class Query(BaseModel):
-#
-# class Query(BaseModel):
-#     query: str
-
-# @app.post("/")
-# def researchAgent(query: Query):
-#     query = query.query
-#     content = agent({"input": query})
-#     actual_content = content['output']
-#     return actual_content
