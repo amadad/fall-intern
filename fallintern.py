@@ -27,7 +27,6 @@ SERPER_API_KEY = os.getenv("SERPER_API_KEY")
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 llm = ChatOpenAI(model_name='gpt-3.5-turbo')
 
-# Define a search function to query Google using serper.dev API
 def search(query: str) -> str:
     """Search Google using the serper.dev API and return the results."""
     url = "https://google.serper.dev/search"
@@ -38,7 +37,6 @@ def search(query: str) -> str:
     response = requests.post(url, headers=headers, json={"q": query})
     return response.text
 
-# Define a function to scrape website content and potentially summarize it
 def scrape_website(objective: str, url: str) -> str:
     """Scrape a website and summarize its content if it's too large."""
     headers = {
@@ -56,7 +54,6 @@ def scrape_website(objective: str, url: str) -> str:
 
     raise ValueError(f"HTTP request failed with status code {response.status_code}")
 
-# Define a function to summarize long content
 def summary(objective: str, content: str) -> str:
     """Generate a summary of the given content based on the provided objective."""
     llm = ChatOpenAI(temperature=0, model="gpt-3.5-turbo-16k")
@@ -79,12 +76,10 @@ def summary(objective: str, content: str) -> str:
     )
     return summary_chain.run(input_documents=docs, objective=objective)
 
-# Define input model for the scrape_website function
 class ScrapeWebsiteInput(BaseModel):
     objective: str  # Objective or task provided by the user
     url: str  # URL of the website to be scraped
 
-# Define a tool for scraping websites
 class ScrapeWebsiteTool(BaseTool):
     name = "scrape_website"
     description = ("Useful for retrieving data from a website. "
@@ -96,13 +91,12 @@ class ScrapeWebsiteTool(BaseTool):
         """Execute the tool."""
         return scrape_website(objective, url)
 
-# Initialize agent with tools
 tools = [
     Tool(name="Search", func=search, description="Answer questions using current events/data. Be specific."),
     ScrapeWebsiteTool(),
 ]
 
-system_message_content = """..."""  # Provide the complete system message here as before
+system_message_content = """..."""
 
 agent_kwargs = {
     "extra_prompt_messages": [MessagesPlaceholder(variable_name="memory")],
@@ -121,17 +115,14 @@ agent = initialize_agent(
     memory=memory,
 )
 
-# Define the main Streamlit app
 def main():
     """Main Streamlit application."""
     st.set_page_config(page_title="Fall Intern", page_icon=":bird:")
     st.header(":globe_with_meridians: Fall Intern")
     st.subheader('Go deeper on topics and questions.')
     query = st.text_input("Research goal")
-
-    # Sidebar with app information and support
     st.sidebar.title('About the app')
-    st.sidebar.markdown("...")  # Provide the sidebar content here as before
+    st.sidebar.markdown("...")
 
     if query:
         with st.spinner("Researching..."):
