@@ -122,7 +122,7 @@ def main():
     st.subheader('Go deeper on topics and questions.')
     query = st.text_input("Research goal")
     st.sidebar.title('About the app')
-    st.sidebar.markdown("...")
+    st.sidebar.markdown("Fall Intern is a research assistant that will answer your query by searching, scraping and summmarizing real time results from across the web and return a cogent document with citations.")
 
     if query:
         with st.spinner("Researching..."):
