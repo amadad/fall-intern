@@ -1,16 +1,13 @@
 import os
-import time
-import json
 import requests
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 import streamlit as st
-from openai import OpenAI
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 from typing import Type
-from langchain import PromptTemplate
 from langchain.agents import initialize_agent, Tool, AgentType
 from langchain.chat_models import ChatOpenAI
+from langchain.prompts import PromptTemplate 
 from langchain.prompts import MessagesPlaceholder
 from langchain.memory import ConversationSummaryBufferMemory
 from langchain.text_splitter import RecursiveCharacterTextSplitter
@@ -20,12 +17,11 @@ from langchain.schema import SystemMessage
 
 # Load environment variables
 load_dotenv()
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 BROWSERLESS_API_KEY = os.getenv("BROWSERLESS_API_KEY")
 SERPER_API_KEY = os.getenv("SERPER_API_KEY")
 
-# Initialize ChatOpenAI model
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-llm = ChatOpenAI(model_name='gpt-3.5-turbo')
+llm = ChatOpenAI(model_name='gpt-3.5-turbo-1106')
 
 def search(query: str) -> str:
     """Search Google using the serper.dev API and return the results."""
