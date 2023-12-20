@@ -1,11 +1,9 @@
 import os
 import csv
-import time
-import json
 import requests
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 from typing import Type
 
 # Langchain imports
