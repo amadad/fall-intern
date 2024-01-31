@@ -4,17 +4,12 @@ from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 from pydantic import BaseModel
 from typing import Type
-from langchain.agents import initialize_agent, Tool, AgentType
 from langchain_openai import ChatOpenAI
 from langchain.prompts import PromptTemplate 
-from langchain.prompts import MessagesPlaceholder
-from langchain.memory import ConversationSummaryBufferMemory
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.chains.summarize import load_summarize_chain
 from langchain.tools import BaseTool
-from langchain.schema import SystemMessage
 
-# Load environment variables
 load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 BROWSERLESS_API_KEY = os.getenv("BROWSERLESS_API_KEY")

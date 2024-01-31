@@ -2,14 +2,12 @@ import os
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 import streamlit as st
-from pydantic import BaseModel
 from typing import Type
 from tools import search, ScrapeWebsiteTool
 from langchain.agents import initialize_agent, Tool, AgentType
 from langchain_openai import ChatOpenAI
 from langchain.prompts import MessagesPlaceholder
 from langchain.memory import ConversationSummaryBufferMemory
-from langchain.chains.summarize import load_summarize_chain
 from langchain.schema import SystemMessage
 
 # Load environment variables
@@ -40,7 +38,7 @@ agent = initialize_agent(
     tools,
     llm,
     agent=AgentType.OPENAI_FUNCTIONS,
-    verbose=False,
+    verbose=True,
     max_iterations=5,
     agent_kwargs=agent_kwargs,
     memory=memory,
